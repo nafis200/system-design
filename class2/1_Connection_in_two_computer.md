@@ -255,6 +255,7 @@ while add port then res come he understand which app go response
 
 2. OSI Model: Layer Breakdown
 Plaintext
+
 +-----------------------------------------------------------+
 | Layer 7: Application  │ HTTP, DNS  │ "কী Service চাই?"     |
 | Layer 6: Presentation │ Encryption │ Data formatting & JSON|
@@ -281,4 +282,64 @@ Data Link (L2): MAC Address যুক্ত হয়ে Frame তৈরি হ�
 
 Physical (L1): ডেটা Binary (0101)-এ রূপান্তরিত হয়ে Wi-Fi বা Cable দিয়ে বের হয়।
 
+
+২. Memory Allocation & Process Flow (User Space to Kernel to Hardware)
+ডেটা যখন অ্যাপ থেকে বের হয়ে নেটওয়ার্কে যায়, তখন মেমোরি ব্যবহারের ৩টি অঞ্চল পার হতে হয়:
+
+Plaintext
++-------------------------------------------------------------------------+
+| [ USER SPACE (RAM) ]   │ L7 (App) -> L6 (Presentation) -> L5 (Session)  |
++-------------------------------------------------------------------------+
+| [ KERNEL SPACE (RAM) ] │ L4 (Transport / TCP Chunking) -> L3 (Network)  |
++-------------------------------------------------------------------------+
+| [ HARDWARE (NIC) ]     │ L2 (Data Link / MAC) -> L1 (Physical / Bits)   |
++-------------------------------------------------------------------------+
+User Space (App RAM):
+
+Application, Presentation & Session (L7, L6, L5): এগুলো অ্যাপ্লিকেশনের নিজ মেমোরিতে (RAM) চলে। ব্রাউজার বা অ্যাপ মূল ডেটা (যেমন: ১ MB-এর একটি JSON বা ছবি) তৈরি করে, Encod/Encrypt করে এবং সেশন শুরু করে।
+
+Kernel Space (OS RAM):
+
+Transport Layer (L4): অপারেটিং সিস্টেমের Kernel বড় ডেটাটিকে ছোট ছোট টুকরো (Chunks/Segments)-এ ভাগ করে। প্রতি টুকরোতে Source Port, Destination Port এবং Sequence Number বসায়।
+
+Network Layer (L3): Kernel প্রতিটি Segment-এর সাথে IP Address যুক্ত করে Packet বানায় এবং Routing পথ ঠিক করে।
+
+Hardware Level (NIC Buffer):
+
+Data Link & Physical (L2, L1): Kernel পুরো Packet-টি Network Interface Card (NIC/Wi-Fi Chip)-এর বাফারে পাঠিয়ে দেয়। NIC তাতে MAC Address সিল মেরে Binary Bits (0101) হিসেবে বাতাসে বা কেবলে ছেড়ে দেয়।
+
+৩. Step-by-Step Chunking & Sequencing Example
+ধরো, তুমি ১ megabyte-এর একটি JSON ফাইল পাঠাচ্ছ। ১ MB একবারে পাঠানো সম্ভব নয়, তাই OS Kernel এটিকে ছোট ছোট টুকরোতে ভাগ করে:
+
+Plaintext
+Original Data (1 MB)  --->  [Chunk 1] [Chunk 2] [Chunk 3] [Chunk 4] [Chunk 5]
+১. Chunking at Transport Layer (L4)
+Kernel প্রতিটি Chunks-কে Segment বানায় এবং একই পোর্ট ও পর্যায়ক্রমিক Sequence Number দেয়:
+
+Segment 1: Port: 443 | Seq: 101
+
+Segment 2: Port: 443 | Seq: 102
+
+Segment 3: Port: 443 | Seq: 103
+
+২. Packaging at Network Layer (L3)
+প্রতিটি Segment-এর সাথে IP বসে Packet তৈরি হয়:
+
+Packet 1: IP: 142.250.190.46 | Port: 443 | Seq: 101
+
+৩. Frame & Bits (L2 & L1)
+NIC চিপের মাধ্যমে MAC যুক্ত হয়ে Frame তৈরি হয় এবং কেবল/Wi-Fi দিয়ে বের হয়ে যায়।
+
+৪. Server Reassembly (গন্তব্যে পৌঁছানো)
+ইন্টারনেটের রাউটিংয়ের কারণে টুকরোগুলো যদি সার্ভারে অগোছালো হয়েও পৌঁছায় (যেমন: Seq 102 আগে এলো, Seq 101 পরে এলো), সার্ভারের OS Kernel Port Number দেখে চিনে নেয় এটা কোন অ্যাপের ডাটা এবং Sequence Number (101, 102, 103) দেখে সেগুলোকে আবার আগের মতো ১ MB ফাইলে জোড়া লাগিয়ে অ্যাপকে দেয়।
+
 # 4th part
+
+TCP and UDP
+
+TCP maintain consistency
+UDP not maintain consistency
+
+server and client comunication medium must be same
+
+TCP --> UDP not connect each others
