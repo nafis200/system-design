@@ -231,53 +231,54 @@ Change
 
 # 3rd part
 
-OSI Model
+1. Fundamental Concepts
 
-7 Application  Http Dns  (important)
-6 presentation 
-5 Session
-4 Transport      (important)
-3 Network - IP  (important)
-2 Data link
-1 physical  (binary data exists)
+IP Address: নেটওয়ার্কে ডিভাইস শনাক্ত করে (Device Address)।
 
-┌─────────────────────────────────────────────┐
-│ 7️⃣ APPLICATION                             │
-│    HTTP, DNS                                │
-│    → Application-এর communication          │
-├─────────────────────────────────────────────┤
-│ 6️⃣ PRESENTATION                            │
-│    Format, Encoding, Compression            │
-│    Encryption*                              │
-│    → Data কীভাবে represent হবে             │
-├─────────────────────────────────────────────┤
-│ 5️⃣ SESSION                                  │
-│    Session Management                       │
-│    → Communication session manage করা      │
-├─────────────────────────────────────────────┤
-│ 4️⃣ TRANSPORT ⭐                            │
-│    TCP, UDP                                 │
-│    → End-to-End data transport              │
-├─────────────────────────────────────────────┤
-│ 3️⃣ NETWORK ⭐                              │
-│    IP                                       │
-│    → কোন network/device-এর দিকে যাবে       │
-├─────────────────────────────────────────────┤
-│ 2️⃣ DATA LINK                               │
-│    Ethernet, Wi-Fi, MAC                     │
-│    → Local device ↔ device                 │
-├─────────────────────────────────────────────┤
-│ 1️⃣ PHYSICAL                                │
-│    Bits / Signals                           │
-│    → Actual signal transmission             │
-│      Cable / Fiber / Radio                  │
-└─────────────────────────────────────────────┘
+MAC Address: ডিভাইসের Network Interface Card (NIC)-এর স্থায়ী ও অনন্য ভৌতিক পরিচয় (Physical Address)।
 
+Port Number: ডিভাইসের ভেতরে নির্দিষ্ট অ্যাপ্লিকেশন শনাক্ত করে (Application Address)।
 
-7  Application   → কী communicate করছি?
-6  Presentation  → Data কীভাবে represent হবে?
-5  Session       → Session কীভাবে manage হবে?
-4  Transport     → TCP/UDP দিয়ে কীভাবে deliver হবে?
-3  Network       → IP দিয়ে কোথায় যাবে?
-2  Data Link     → Local-এ কোন device? (MAC)
-1  Physical      → আসল signal কীভাবে যাবে?
+Plaintext
+Example: 192.0.20.120:5000 
+         [  Device IP  ]:[Port]
+
+Summary: IP ডেটাকে সঠিক কম্পিউটারে পৌঁছে দেয়, আর Port Number সেই ডেটাকে সঠিক অ্যাপে (যেমন: WhatsApp, Zoom, Chrome) পাঠায়।
+
+network address same : 192.01.12.255
+
+whatsapp port = 100
+zoom port = 200
+youtube port = 300
+
+while add port then res come he understand which app go response
+
+2. OSI Model: Layer Breakdown
+Plaintext
++-----------------------------------------------------------+
+| Layer 7: Application  │ HTTP, DNS  │ "কী Service চাই?"     |
+| Layer 6: Presentation │ Encryption │ Data formatting & JSON|
+| Layer 5: Session      │ Auth/Sync  │ Session Management   |
++-----------------------------------------------------------+
+| Layer 4: Transport    │ TCP/UDP    │ Port Numbers & Segments|
+| Layer 3: Network      │ IP         │ Source & Destination IP|
+| Layer 2: Data Link    │ MAC        │ Frame & Hardware Addressing
+| Layer 1: Physical     │ Bits (0/1) │ Cable, Wi-Fi, Signals |
++-----------------------------------------------------------+
+3. Data Flow (Sending & Receiving)
+Sender Side (Top-to-Bottom / Encapsulation)
+Application (L7): Chrome থেকে HTTP Request তৈরি হয়।
+
+Presentation (L6): JSON ডেটা UTF-8 Encoding এবং HTTPS Encryption-এর মাধ্যমে Bytes-এ রূপান্তর হয়।
+
+Session (L5): Server-এর সাথে Connection Session হ্যান্ডেল হয়।
+
+Transport (L4): Source Port ও Destination Port যুক্ত হয়ে Segment তৈরি হয়।
+
+Network (L3): Source IP ও Destination IP যুক্ত হয়ে Packet তৈরি হয়।
+
+Data Link (L2): MAC Address যুক্ত হয়ে Frame তৈরি হয়।
+
+Physical (L1): ডেটা Binary (0101)-এ রূপান্তরিত হয়ে Wi-Fi বা Cable দিয়ে বের হয়।
+
+# 4th part
