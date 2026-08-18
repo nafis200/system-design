@@ -343,3 +343,19 @@ UDP not maintain consistency
 server and client comunication medium must be same
 
 TCP --> UDP not connect each others
+
+TCP chunk
+
+how many chunk which chunk number am i 
+
+
+total 3 chunk
+
+1 3      2  3      3 3
+
+UDP  not chunk
+
+
+public ip : which is unique globally
+
+private ip : router inside ip are unique but same ip diffrent router
