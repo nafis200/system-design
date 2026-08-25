@@ -49,14 +49,7 @@ Bridge (Layer 2) ও Hub-to-Hub নেটওয়ার্ককাজ: Bridge 
 Subnet mask: 255.255.255.0
 
 ARP : Address Resolution Protocol
-
-
-
-Default Gateway: 192.68.1.1
-Ipv4 address:    192.68.1.2
-subnet mask:
-
-need while a devices connected each other
+ connected each other
 
 router has two NIC (network interface Card so its two mac address)
 
